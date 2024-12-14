@@ -1,0 +1,113 @@
+/* Estilos gerais */
+.container {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f5f5;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header {
+    text-align: center;
+    font-size: 2.5em;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .select-container,
+  .radio-container,
+  .checkbox-container,
+  .metrics-container {
+    margin-bottom: 30px;
+  }
+  
+  .select-label,
+  .radio-label,
+  .checkbox-label,
+  .metrics-label {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .checkbox-item {
+    margin: 10px 0;
+  }
+  
+  .checkbox-label {
+    margin-left: 10px;
+  }
+  
+  .chart-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .chart-wrapper {
+    width: 48%;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chart-type-selector {
+    margin-bottom: 20px;
+  }
+  
+  .chart-type-select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+  
+  .color-legend {
+    margin-top: 30px;
+  }
+  
+  .color-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+  }
+  
+  .color-box {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  
+  .generate-pdf-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .generate-pdf-btn:hover {
+    background-color: #45a049;
+  }
+  
+  .generate-pdf-btn:focus {
+    outline: none;
+  }
+  
+  .generate-pdf-btn svg {
+    margin-right: 10px;
+  }
+  
+  .radio-container div {
+    margin: 10px 0;
+  }
+  
+  .radio-item {
+    display: flex;
+    align-items: center;
+  }
+  

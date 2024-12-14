@@ -1,0 +1,100 @@
+/* Container principal do MenuMetrics */
+.metrics-container {
+    position: fixed;
+    top: 30%;
+    left: 260px;
+    transform: translateY(-50%);
+    z-index: 999;
+    width: 250px;
+    animation: slideInLeft 0.5s ease-out forwards; /* Animação para entrar na tela */
+  }
+  
+  .metrics-container.slide-out {
+    animation: slideOutLeft 0.5s ease-out forwards; /* Animação para sair da tela */
+  }
+  
+  /* Caixa branca com os botões */
+  .metrics-box {
+    background-color: white;
+    padding: 20px;
+    width: 250px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  /* Animação para a caixa deslizar da esquerda para a direita (entrada) */
+  @keyframes slideInLeft {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  /* Animação para a caixa deslizar da esquerda para a direita (saída) */
+  @keyframes slideOutLeft {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  
+  /* Estilo do cabeçalho com o nome da empresa */
+  .metrics-header h2 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Estilo dos botões flutuantes */
+  .metrics-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .metrics-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  
+  .metrics-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Estilos específicos para cada botão */
+  .metrics-button.facebook {
+    background-color: #4267b2; /* Cor do Facebook */
+  }
+  
+  .metrics-button.facebook:hover {
+    background-color: #365899;
+  }
+  
+  .metrics-button.google {
+    background-color: #4285f4; /* Cor do Google */
+  }
+  
+  .metrics-button.google:hover {
+    background-color: #357ae8;
+  }
+  
+  .metrics-button.hotmart {
+    background-color: #f1c40f; /* Cor do Hotmart */
+  }
+  
+  .metrics-button.hotmart:hover {
+    background-color: #e1b70f;
+  }
+  

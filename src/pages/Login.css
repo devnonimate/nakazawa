@@ -1,0 +1,165 @@
+/* Estilos principais */
+.custom-login-page * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.custom-login-page {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #364953, #469ff8); /* Efeito degradê */
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden; /* Garante que o efeito de blur não ultrapasse os limites da tela */
+}
+
+/* Adicionando uma camada com o efeito blur */
+.custom-login-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit; /* Herda o fundo degradê */
+  filter: blur(10px); /* Adiciona o efeito de desfoque */
+  z-index: -1; /* Garante que o blur fique atrás de todo o conteúdo */
+}
+
+/* Logo do topo (agora fixo) */
+.custom-login-page .logo {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 40px;
+  font-weight: bold;
+  color: white;
+  z-index: 10; /* Garante que o logo fique acima do fundo com blur */
+}
+
+/* Contêiner principal do login */
+.custom-login-page .login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Lado direito (Typewriter) */
+.custom-login-page .right-side {
+  position: absolute;
+  right: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50%;
+}
+
+.custom-login-page .typewriter {
+  font-size: 24px;
+  color: white;
+  white-space: pre-wrap; /* Quebra de linha automática */
+  overflow-wrap: break-word;
+  padding-right: 10px;
+  text-align: left;
+  display: inline-block;
+}
+
+.custom-login-page .cursor {
+  font-weight: bold;
+  color: white;
+  animation: blink 0.5s step-end infinite;
+}
+
+.custom-login-page .cursor.blink {
+  animation: blink 0.5s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Lado esquerdo (Login) */
+.custom-login-page .left-side {
+  position: absolute;
+  left: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30%;
+}
+
+.custom-login-page .login-box {
+  background-color: white;
+  border-radius: 20px;
+  padding: 30px;
+  width: 100%;
+  max-width: 300px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.custom-login-page h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.custom-login-page .login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.custom-login-page .input-container {
+  position: relative;
+  width: 100%;
+}
+
+.custom-login-page .input-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.custom-login-page .login-input {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 10px 10px 10px 40px; /* Espaço à esquerda para o ícone */
+  margin: 10px 0;
+  width: 100%;
+  font-size: 16px;
+}
+
+.custom-login-page .login-button {
+  background-color: #37b99c; /* Cor do botão */
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.custom-login-page .login-button:hover {
+  background-color: #2e9b85;
+}
+
+.custom-login-page .error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+}

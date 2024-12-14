@@ -1,0 +1,119 @@
+.client-button-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Espaçamento entre os clientes */
+}
+
+/* Estilo do botão combinado (nome e flecha) */
+.client-button {
+  display: flex;
+  align-items: center;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  justify-content: space-between; /* Espalha os elementos do nome e da flecha */
+}
+
+/* Nome do cliente */
+.client-name {
+  flex-grow: 1; /* Faz com que o nome ocupe o espaço restante */
+  padding-right: 10px;
+}
+
+/* Estilo da flecha */
+.arrow {
+  font-size: 18px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+/* Exibição da flecha para cima ou para baixo */
+.arrow.up {
+  transform: rotate(180deg); /* Inverte a direção da flecha */
+}
+
+.arrow.down {
+  transform: rotate(0deg); /* Flecha para baixo padrão */
+}
+
+/* Formulário de edição */
+.edit-form {
+  margin-top: 10px;
+  display: none;
+}
+
+.edit-form.open {
+  display: block;
+}
+
+/* Estilo dos campos de entrada */
+.popup-input {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Botões de salvar e cancelar */
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Estilos do botão de salvar */
+.popup-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.save-button,
+.cancel-button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  width: 150px;
+  font-size: 16px;
+}
+
+.save-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+/* Botão para adicionar cliente */
+.add-client {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.add-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 5px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.add-client {
+  display: flex;
+  justify-content: center;  /* Centraliza horizontalmente */
+  align-items: center; 
+} 
