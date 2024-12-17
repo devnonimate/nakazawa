@@ -8,6 +8,9 @@ import Configuracoes from './pages/Configuracoes';
 import GerenciarEmpresas from './pages/GerenciarEmpresas';
 import Home from './pages/Home'; // Importando o componente Home
 import EditarEmpresa from './pages/EditarEmpresa'; // Importando o componente EditarEmpresa
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'; // Importando a página de Política de Privacidade
+import PoliticaDePrivacidade from './pages/PoliticaDePrivacidade';
+import TermsOfService from './pages/TermsOfService';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -36,12 +39,13 @@ const App = () => {
 const AppContent = ({ isAuthenticated }) => {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
+  const isPrivacyPolicyPage = location.pathname === '/privacy-policy';
 
   return (
     <>
-      {/* Renderiza o Header em todas as páginas, exceto na página de login */}
-      {!isLoginPage && <Header />}
-      <div style={{ padding: !isLoginPage ? '20px' : '0' }}>
+      {/* Renderiza o Header em todas as páginas, exceto na página de login e na página de política de privacidade */}
+      {!isLoginPage && !isPrivacyPolicyPage && <Header />}
+      <div style={{ padding: !isLoginPage && !isPrivacyPolicyPage ? '20px' : '0' }}>
         <Routes>
           <Route
             path="/"
@@ -80,6 +84,18 @@ const AppContent = ({ isAuthenticated }) => {
           <Route
             path="/editar-empresa/:id"
             element={isAuthenticated ? <EditarEmpresa /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/privacy-policy"
+            element={<PrivacyPolicyPage />} // Página de Política de Privacidade acessível a todos
+          />
+          <Route
+            path="/politica-de-privacidade"
+            element={<PoliticaDePrivacidade />}
+          />
+          <Route
+            path="/TermsOfService"
+            element={<TermsOfService />}
           />
         </Routes>
       </div>

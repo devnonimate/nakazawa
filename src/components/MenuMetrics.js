@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './MenuMetrics.css';
-import FacebookAds from './FacebookAds'; // Componente para Facebook Ads
-import GoogleAds from './GoogleAds'; // Componente para Google Ads
+import FacebookAds from './FacebookADS'; // Componente para Facebook Ads
+import GoogleAds from './GoogleADS'; // Componente para Google Ads
 import Hotmart from './Hotmart'; // Componente para Hotmart
 
 const MenuMetrics = ({ cliente, empresaSelecionada, setEmpresaSelecionada }) => {
