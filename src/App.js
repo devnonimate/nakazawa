@@ -1,102 +1,99 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import Login from './pages/Login'; // Importando o componente Login
-import Header from './components/Header'; // Importando o Header
-import Metricas from './pages/Metricas'; // Importando o componente Metricas
+import Login from './pages/Login';
+import Header from './components/Header';
+import Metricas from './pages/Metricas';
 import CadastroClientes from './pages/CadastroClientes';
 import Configuracoes from './pages/Configuracoes';
 import GerenciarEmpresas from './pages/GerenciarEmpresas';
-import Home from './pages/Home'; // Importando o componente Home
-import EditarEmpresa from './pages/EditarEmpresa'; // Importando o componente EditarEmpresa
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage'; // Importando a página de Política de Privacidade
+import Home from './pages/Home';
+import EditarEmpresa from './pages/EditarEmpresa';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import PoliticaDePrivacidade from './pages/PoliticaDePrivacidade';
 import TermsOfService from './pages/TermsOfService';
+import Cadastro from './pages/Cadastro';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Verifica se o usuário está autenticado no localStorage
-    const user = localStorage.getItem('user');
-    if (user) {
-      setIsAuthenticated(true);
-    }
-    setLoading(false); // Conclui o carregamento
+    // Verifica a autenticação através do backend
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/check-auth', {
+          credentials: 'include', // Envia cookies com a requisição
+        });
+        if (response.ok) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error('Erro ao verificar autenticação:', error);
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
   }, []);
 
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    // Remove a autenticação e redireciona para a página de login
+    setIsAuthenticated(false);
+    fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/logout', { credentials: 'include' })
+      .catch((err) => console.error('Erro ao deslogar:', err));
+  };
+
   if (loading) {
-    return <div>Loading...</div>; // Exibe um carregamento enquanto verifica a autenticação
+    return <div>Loading...</div>;
   }
 
   return (
     <Router>
-      <AppContent isAuthenticated={isAuthenticated} />
+      <AppContent
+        isAuthenticated={isAuthenticated}
+        onLoginSuccess={handleLoginSuccess}
+        onLogout={handleLogout}
+      />
     </Router>
   );
 };
 
-const AppContent = ({ isAuthenticated }) => {
+const AppContent = ({ isAuthenticated, onLoginSuccess, onLogout }) => {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
   const isPrivacyPolicyPage = location.pathname === '/privacy-policy';
 
+  if (!isAuthenticated && !isLoginPage && !isPrivacyPolicyPage) {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <>
-      {/* Renderiza o Header em todas as páginas, exceto na página de login e na página de política de privacidade */}
-      {!isLoginPage && !isPrivacyPolicyPage && <Header />}
+      {!isLoginPage && !isPrivacyPolicyPage && <Header onLogout={onLogout} />}
       <div style={{ padding: !isLoginPage && !isPrivacyPolicyPage ? '20px' : '0' }}>
         <Routes>
-          <Route
-            path="/"
-            element={
-              isAuthenticated ? <Navigate to="/home" replace /> : <Navigate to="/login" replace />
-            }
-          />
-          <Route
-            path="/login"
-            element={isAuthenticated ? <Navigate to="/home" replace /> : <Login />}
-          />
-          <Route
-            path="/home"
-            element={isAuthenticated ? <Home /> : <Navigate to="/login" replace />}
-          />
-          <Route
-            path="/gerenciar-empresas"
-            element={isAuthenticated ? <GerenciarEmpresas /> : <Navigate to="/login" replace />}
-          />
-          <Route
-            path="/metricas"
-            element={isAuthenticated ? <Metricas /> : <Navigate to="/login" replace />}
-          />
-          <Route
-            path="/metricas/:empresaId"
-            element={isAuthenticated ? <Metricas /> : <Navigate to="/login" replace />}
-          />
-          <Route
-            path="/cadastro-clientes"
-            element={isAuthenticated ? <CadastroClientes /> : <Navigate to="/login" replace />}
-          />
-          <Route
-            path="/configuracoes"
-            element={isAuthenticated ? <Configuracoes /> : <Navigate to="/login" replace />}
-          />
-          <Route
-            path="/editar-empresa/:id"
-            element={isAuthenticated ? <EditarEmpresa /> : <Navigate to="/login" replace />}
-          />
-          <Route
-            path="/privacy-policy"
-            element={<PrivacyPolicyPage />} // Página de Política de Privacidade acessível a todos
-          />
-          <Route
-            path="/politica-de-privacidade"
-            element={<PoliticaDePrivacidade />}
-          />
-          <Route
-            path="/TermsOfService"
-            element={<TermsOfService />}
-          />
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/login" element={<Login onLoginSuccess={onLoginSuccess} />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/gerenciar-empresas" element={<GerenciarEmpresas />} />
+          <Route path="/metricas" element={<Metricas />} />
+          <Route path="/metricas/:empresaId" element={<Metricas />} />
+          <Route path="/cadastro-clientes" element={<CadastroClientes />} />
+          <Route path="/configuracoes" element={<Configuracoes />} />
+          <Route path="/editar-empresa/:id" element={<EditarEmpresa />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/politica-de-privacidade" element={<PoliticaDePrivacidade />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/cadastro" element={<Cadastro />} />
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </div>
     </>

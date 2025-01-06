@@ -114,10 +114,11 @@
   text-align: center;
 }
 
+/* Ajuste para o layout geral */
 .custom-login-page .login-form {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center; /* Centraliza os elementos dentro do formulário */
 }
 
 .custom-login-page .input-container {
@@ -162,4 +163,73 @@
   color: red;
   font-size: 14px;
   margin-bottom: 10px;
+}
+
+/* Centralizar o botão do Facebook verticalmente */
+.custom-login-page .facebook-login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1877f2; /* Azul padrão do Facebook */
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 300px;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.custom-login-page .facebook-login-button:hover {
+  background-color: #145dbf; /* Tom mais escuro no hover */
+}
+
+/* Logo do Facebook */
+.custom-login-page .facebook-logo {
+  height: 24px; /* Altura da imagem */
+  width: auto; /* Largura proporcional */
+  margin-right: 10px; /* Espaço entre a imagem e o texto */
+}
+
+/* Estilo para centralizar o texto "Ou" */
+.custom-login-page .alternative-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 1px 0; /* Espaçamento entre os elementos */
+}
+
+.custom-login-page .alternative-login p {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #888;
+  text-align: center;
+}
+
+/* Ajuste para o layout geral */
+.custom-login-page .login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza os elementos dentro do formulário */
+}
+
+.custom-login-page .login-button,
+.custom-login-page .facebook-login-button {
+  margin-bottom: 15px; /* Espaçamento uniforme entre os botões */
+}
+
+.signup-link {
+  text-align: center; /* Centraliza o texto */
+}
+
+.clickable {
+  display: inline-block; /* Permite controle de posicionamento como bloco */
+  margin-top: 5px; /* Adiciona espaço entre as linhas */
+  cursor: pointer; /* Muda o cursor ao passar sobre o texto */
+  color: blue; /* Define a cor para indicar que é clicável */
+  text-decoration: underline; /* Opcional: sublinha o texto */
 }

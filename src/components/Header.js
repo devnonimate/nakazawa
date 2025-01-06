@@ -1,13 +1,20 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const location = useLocation();
-  
+  const navigate = useNavigate();
+
   // Salva a última página acessada no LocalStorage
   React.useEffect(() => {
     localStorage.setItem('lastVisited', location.pathname);
   }, [location]);
+
+  const handleLogout = () => {
+    // Limpa informações de autenticação (exemplo: cookies, localStorage, etc.)
+    localStorage.removeItem('authToken');
+    navigate('/login'); // Redireciona para a página de login
+  };
 
   return (
     <header style={headerStyle}>
@@ -28,6 +35,9 @@ const Header = () => {
           </li>
           <li style={navItemStyle}>
             <Link to="/configuracoes" style={linkStyle}>Configurações</Link>
+          </li>
+          <li style={navItemStyle}>
+            <button onClick={handleLogout} style={logoutButtonStyle}>Sair</button>
           </li>
         </ul>
       </nav>
@@ -62,6 +72,14 @@ const navItemStyle = {
 const linkStyle = {
   color: 'white',
   textDecoration: 'none',
+};
+
+const logoutButtonStyle = {
+  background: 'transparent',
+  border: 'none',
+  color: 'white',
+  cursor: 'pointer',
+  fontSize: '16px',
 };
 
 export default Header;

@@ -1,118 +1,160 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { FaSync } from 'react-icons/fa';
 
 const Configuracoes = () => {
   const [empresas, setEmpresas] = useState([]);
-  const [selectedEmpresa, setSelectedEmpresa] = useState(null);
-  const [facebookToken, setFacebookToken] = useState('');
-  const [hotmartToken, setHotmartToken] = useState('');
-  const [googleToken, setGoogleToken] = useState('');
+  const [authenticatedEmpresas, setAuthenticatedEmpresas] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // Carregar as empresas do LocalStorage
-    const empresas = JSON.parse(localStorage.getItem('empresas')) || [];
-    setEmpresas(empresas);
+    carregarDados(); // Carregar os dados inicialmente
   }, []);
 
-  const handleEmpresaChange = (empresaId) => {
-    const empresa = empresas.find((e) => e.id === empresaId);
-    if (empresa) {
-      setSelectedEmpresa(empresa);
-      // Carregar os tokens salvos (se existirem) para esta empresa
-      setFacebookToken(empresa.facebookToken || '');
-      setHotmartToken(empresa.hotmartToken || '');
-      setGoogleToken(empresa.googleToken || '');
-    }
-  };
+  const carregarDados = () => {
+    const username = localStorage.getItem('username'); // O e-mail do usuário logado
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!selectedEmpresa) {
-      setErrorMessage('Selecione uma empresa para configurar as APIs.');
+    if (!username) {
+      setErrorMessage('Usuário não autenticado. Faça login novamente.');
       return;
     }
 
-    const updatedEmpresas = empresas.map((empresa) => {
-      if (empresa.id === selectedEmpresa.id) {
-        return {
-          ...empresa,
-          facebookToken,
-          hotmartToken,
-          googleToken,
-        };
-      }
-      return empresa;
-    });
+    setErrorMessage('Carregando dados...');
 
-    localStorage.setItem('empresas', JSON.stringify(updatedEmpresas));
-    setEmpresas(updatedEmpresas);
-    setErrorMessage('');
-    navigate('/home'); // Redireciona para a página principal
+    fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/consultar-empresa-cliente', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: username,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Erro ao carregar dados das empresas e clientes');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setEmpresas(
+          data.map((item) => ({
+            id: item.empresa_id,
+            nome: item.empresa_nome,
+          }))
+        );
+        setErrorMessage('');
+      })
+      .catch((error) => {
+        setErrorMessage(
+          'Não foi possível carregar os dados. Tente novamente mais tarde.'
+        );
+        console.error(error);
+      });
   };
+
+  const handleLoginFacebook = (empresaNome) => {
+    const email = localStorage.getItem('username'); // O email do usuário logado
+  
+    if (!email) {
+      setErrorMessage('Usuário não autenticado. Faça login novamente.');
+      return;
+    }
+  
+    fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/login-facebook-marketing', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        empresa: empresaNome,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.redirect_url) {
+          window.location.href = data.redirect_url; // Redireciona para o Facebook
+        } else {
+          setErrorMessage(data.message || 'Erro ao autenticar com o Facebook');
+        }
+      })
+      .catch((error) => {
+        setErrorMessage('Erro ao iniciar autenticação com o Facebook.');
+        console.error(error);
+      });
+  };
+  const handleLogoutFacebook = (empresaNome) => {
+  const email = localStorage.getItem('username'); // O email do usuário logado
+
+  if (!email) {
+    setErrorMessage('Usuário não autenticado. Faça login novamente.');
+    return;
+  }
+
+  fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/logout', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: email,
+      empresa: empresaNome,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        setAuthenticatedEmpresas((prev) => ({
+          ...prev,
+          [empresaNome]: false,
+        }));
+        setErrorMessage('Logout realizado com sucesso.');
+      } else {
+        setErrorMessage(data.message || 'Erro ao realizar logout.');
+      }
+    })
+    .catch((error) => {
+      setErrorMessage('Erro ao realizar logout com o Facebook.');
+      console.error(error);
+    });
+};
 
   return (
     <div style={containerStyle}>
-      <h2 style={headerStyle}>Configuração de Conexão com APIs</h2>
+      <h2 style={headerStyle}>Configuração de Conexão com Facebook Marketing</h2>
       {errorMessage && <div style={errorStyle}>{errorMessage}</div>}
 
-      <div style={empresaSelectStyle}>
-        <label htmlFor="empresaSelect" style={labelStyle}>Selecione uma Empresa</label>
-        <select
-          id="empresaSelect"
-          onChange={(e) => handleEmpresaChange(parseInt(e.target.value))}
-          style={selectStyle}
-        >
-          <option value="">Selecione uma empresa</option>
-          {empresas.map((empresa) => (
-            <option key={empresa.id} value={empresa.id}>
-              {empresa.nome}
-            </option>
-          ))}
-        </select>
-      </div>
+      <button onClick={carregarDados} style={refreshButtonStyle}>
+        <FaSync style={{ marginRight: '10px' }} /> Atualizar Dados
+      </button>
 
-      {selectedEmpresa && (
-        <form onSubmit={handleSubmit} style={formStyle}>
-          <div style={inputGroupStyle}>
-            <label htmlFor="facebookToken" style={labelStyle}>Token do Facebook</label>
-            <input
-              type="text"
-              id="facebookToken"
-              value={facebookToken}
-              onChange={(e) => setFacebookToken(e.target.value)}
-              style={inputStyle}
-              placeholder="Digite o token do Facebook"
-            />
-          </div>
-          <div style={inputGroupStyle}>
-            <label htmlFor="hotmartToken" style={labelStyle}>Token do Hotmart</label>
-            <input
-              type="text"
-              id="hotmartToken"
-              value={hotmartToken}
-              onChange={(e) => setHotmartToken(e.target.value)}
-              style={inputStyle}
-              placeholder="Digite o token do Hotmart"
-            />
-          </div>
-          <div style={inputGroupStyle}>
-            <label htmlFor="googleToken" style={labelStyle}>Token do Google Ads</label>
-            <input
-              type="text"
-              id="googleToken"
-              value={googleToken}
-              onChange={(e) => setGoogleToken(e.target.value)}
-              style={inputStyle}
-              placeholder="Digite o token do Google Ads"
-            />
-          </div>
-
-          <button type="submit" style={submitButtonStyle}>Salvar Conexões</button>
-        </form>
-      )}
+      <ul style={empresaListStyle}>
+        {empresas.map((empresa) => (
+          <li key={empresa.id} style={empresaItemStyle}>
+            <span style={empresaNameStyle}>{empresa.nome}</span>
+            {authenticatedEmpresas[empresa.nome] ? (
+              <div>
+                <button style={authenticatedButtonStyle} disabled>
+                  Autenticado
+                </button>
+                <button
+                  style={logoutButtonStyle}
+                  onClick={() => handleLogoutFacebook(empresa.nome)}
+                >
+                  Sair
+                </button>
+              </div>
+            ) : (
+              <button
+                style={loginButtonStyle}
+                onClick={() => handleLoginFacebook(empresa.nome)}
+              >
+                Login com Facebook
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
@@ -122,76 +164,77 @@ const containerStyle = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  padding: '40px 20px',
-  maxWidth: '800px',
-  margin: '0 auto',
-  backgroundColor: '#ffffff',
-  boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-  borderRadius: '10px',
+  padding: '20px',
 };
 
 const headerStyle = {
   fontSize: '24px',
-  color: '#333',
   fontWeight: 'bold',
   marginBottom: '20px',
-};
-
-const formStyle = {
-  width: '100%',
-};
-
-const inputGroupStyle = {
-  marginBottom: '20px',
-};
-
-const labelStyle = {
-  display: 'block',
-  fontSize: '14px',
-  color: '#333',
-  marginBottom: '8px',
-};
-
-const inputStyle = {
-  width: '100%',
-  padding: '12px',
-  fontSize: '16px',
-  border: '1px solid #ccc',
-  borderRadius: '5px',
-  boxSizing: 'border-box',
-};
-
-const submitButtonStyle = {
-  width: '100%',
-  padding: '14px',
-  fontSize: '16px',
-  backgroundColor: '#4CAF50',
-  color: 'white',
-  border: 'none',
-  borderRadius: '5px',
-  cursor: 'pointer',
-  fontWeight: 'bold',
 };
 
 const errorStyle = {
   color: '#ff0000',
   fontSize: '14px',
   marginBottom: '20px',
-  textAlign: 'center',
 };
 
-const empresaSelectStyle = {
-  marginBottom: '20px',
+const empresaListStyle = {
+  listStyleType: 'none',
+  padding: 0,
   width: '100%',
 };
 
-const selectStyle = {
-  width: '100%',
-  padding: '12px',
-  fontSize: '16px',
+const empresaItemStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: '10px',
+  padding: '10px',
   border: '1px solid #ccc',
   borderRadius: '5px',
-  boxSizing: 'border-box',
+};
+
+const empresaNameStyle = {
+  fontWeight: 'bold',
+  color: '#333',
+};
+
+const loginButtonStyle = {
+  padding: '10px 20px',
+  backgroundColor: '#3b5998',
+  color: 'white',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+};
+
+const authenticatedButtonStyle = {
+  padding: '10px 20px',
+  backgroundColor: '#28a745',
+  color: 'white',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'not-allowed',
+};
+
+const logoutButtonStyle = {
+  marginLeft: '10px',
+  padding: '10px 20px',
+  backgroundColor: '#dc3545',
+  color: 'white',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+};
+
+const refreshButtonStyle = {
+  marginBottom: '20px',
+  padding: '10px 20px',
+  backgroundColor: '#1e88e5',
+  color: 'white',
+  border: 'none',
+  borderRadius: '5px',
 };
 
 export default Configuracoes;

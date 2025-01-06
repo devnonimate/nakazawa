@@ -1,0 +1,128 @@
+/* Estilos principais */
+.custom-signup-page * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.custom-signup-page {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #364953, #469ff8); /* Efeito degradê */
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Adicionando uma camada com o efeito blur */
+.custom-signup-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit; /* Herda o fundo degradê */
+  filter: blur(10px); /* Adiciona o efeito de desfoque */
+  z-index: -1; /* Garante que o blur fique atrás de todo o conteúdo */
+}
+
+/* Logo do topo (agora fixo) */
+.custom-signup-page .logo {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 40px;
+  font-weight: bold;
+  color: white;
+  z-index: 10; /* Garante que o logo fique acima do fundo com blur */
+}
+
+/* Contêiner principal do cadastro */
+.custom-signup-page .signup-box {
+  background-color: white;
+  border-radius: 20px;
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.custom-signup-page h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Formulário de cadastro */
+.custom-signup-page .signup-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.custom-signup-page .input-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.custom-signup-page .input-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.custom-signup-page .signup-input {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 10px 10px 10px 40px; /* Espaço à esquerda para o ícone */
+  width: 100%;
+  font-size: 16px;
+}
+
+.custom-signup-page .signup-button {
+  background-color: #37b99c; /* Cor do botão */
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.custom-signup-page .signup-button:hover {
+  background-color: #2e9b85;
+}
+
+.custom-signup-page .error-message,
+.custom-signup-page .success-message {
+  font-size: 14px;
+  margin-top: 10px;
+  color: red;
+}
+
+.custom-signup-page .success-message {
+  color: green;
+}
+
+/* Link para login */
+.custom-signup-page .login-link {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #888;
+}
+
+.custom-signup-page .clickable {
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+}
