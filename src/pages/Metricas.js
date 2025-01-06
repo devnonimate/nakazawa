@@ -17,7 +17,7 @@ const Metricas = () => {
     // Faz a chamada para o backend para listar as empresas
     const fetchEmpresas = async () => {
       try {
-        const response = await fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/list-empresas', {
+        const response = await fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/list-empresas', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email }),
@@ -64,7 +64,7 @@ const Metricas = () => {
     setError('');
     try {
       // Faz a chamada ao backend para buscar os dados das métricas
-      const response = await fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/mkt-facebook', {
+      const response = await fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/mkt-facebook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -89,7 +89,7 @@ const Metricas = () => {
   const handleRefresh = async () => {
     setError('');
     try {
-      const response = await fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/list-empresas', {
+      const response = await fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/list-empresas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

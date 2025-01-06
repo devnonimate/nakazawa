@@ -47,7 +47,7 @@ const Login = ({ onLoginSuccess }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/login', {
+      const response = await fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ const Login = ({ onLoginSuccess }) => {
 
   const handleFacebookLogin = () => {
     const popup = window.open(
-      'https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/auth/facebook',
+      'https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/auth/facebook',
       'Facebook Login',
       'width=500,height=600'
     );
@@ -82,7 +82,7 @@ const Login = ({ onLoginSuccess }) => {
       if (popup && popup.closed) {
         clearInterval(interval);
 
-        fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/get-facebook-email', {
+        fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/get-facebook-email', {
           method: 'GET',
           credentials: 'include',
         })

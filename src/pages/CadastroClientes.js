@@ -38,7 +38,7 @@ const CadastroClientes = () => {
     };
 
     try {
-      const response = await fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/cadastrar-empresa-cliente', {
+      const response = await fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/cadastrar-empresa-cliente', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

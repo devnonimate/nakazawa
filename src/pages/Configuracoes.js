@@ -20,7 +20,7 @@ const Configuracoes = () => {
 
     setErrorMessage('Carregando dados...');
 
-    fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/consultar-empresa-cliente', {
+    fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/consultar-empresa-cliente', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ const Configuracoes = () => {
       return;
     }
   
-    fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/login-facebook-marketing', {
+    fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/login-facebook-marketing', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ const Configuracoes = () => {
     return;
   }
 
-  fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/logout', {
+  fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/logout', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

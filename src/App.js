@@ -21,7 +21,7 @@ const App = () => {
     // Verifica a autenticação através do backend
     const checkAuth = async () => {
       try {
-        const response = await fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/check-auth', {
+        const response = await fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/check-auth', {
           credentials: 'include', // Envia cookies com a requisição
         });
         if (response.ok) {
@@ -47,7 +47,7 @@ const App = () => {
   const handleLogout = () => {
     // Remove a autenticação e redireciona para a página de login
     setIsAuthenticated(false);
-    fetch('https://04d2-2804-71d4-6004-82c0-cd50-f9fc-d79e-e2ec.ngrok-free.app/api/logout', { credentials: 'include' })
+    fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/logout', { credentials: 'include' })
       .catch((err) => console.error('Erro ao deslogar:', err));
   };
 
