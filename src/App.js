@@ -4,7 +4,6 @@ import Login from './pages/Login';
 import Header from './components/Header';
 import Metricas from './pages/Metricas';
 import CadastroClientes from './pages/CadastroClientes';
-import Configuracoes from './pages/Configuracoes';
 import GerenciarEmpresas from './pages/GerenciarEmpresas';
 import Home from './pages/Home';
 import EditarEmpresa from './pages/EditarEmpresa';
@@ -12,45 +11,57 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import PoliticaDePrivacidade from './pages/PoliticaDePrivacidade';
 import TermsOfService from './pages/TermsOfService';
 import Cadastro from './pages/Cadastro';
+import config from './pages/config.js';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Verifica a autenticação através do backend
-    const checkAuth = async () => {
-      try {
-        const response = await fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/check-auth', {
-          credentials: 'include', // Envia cookies com a requisição
-        });
-        if (response.ok) {
-          setIsAuthenticated(true);
-        } else {
+    // Verifica se o email está salvo no localStorage
+    const email = localStorage.getItem("userEmail");
+    if (email) {
+      setIsAuthenticated(true);
+      setLoading(false);
+    } else {
+      // Verifica com o backend
+      const checkAuth = async () => {
+        try {
+          const response = await fetch(`${config.API_URL}/api/check-auth`, {
+            credentials: 'include', // Envia cookies com a requisição
+          });
+          if (response.ok) {
+            setIsAuthenticated(true);
+            // Armazena o email no localStorage
+            const data = await response.json();
+            localStorage.setItem("userEmail", data.email);
+          } else {
+            setIsAuthenticated(false);
+          }
+        } catch (error) {
+          console.error('Erro ao verificar autenticação:', error);
           setIsAuthenticated(false);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error('Erro ao verificar autenticação:', error);
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkAuth();
+      };
+      checkAuth();
+    }
   }, []);
 
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = (email) => {
     setIsAuthenticated(true);
+    localStorage.setItem("userEmail", email); // Salva o email no localStorage
   };
 
   const handleLogout = () => {
-    // Remove a autenticação e redireciona para a página de login
     setIsAuthenticated(false);
-    fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/logout', { credentials: 'include' })
+    localStorage.removeItem("userEmail"); // Remove o email do localStorage
+    fetch(`${config.API_URL}/api/logout`, { credentials: 'include' })
       .catch((err) => console.error('Erro ao deslogar:', err));
   };
 
+  // Enquanto a autenticação não for verificada, exibe um loading
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -71,6 +82,7 @@ const AppContent = ({ isAuthenticated, onLoginSuccess, onLogout }) => {
   const isLoginPage = location.pathname === '/login';
   const isPrivacyPolicyPage = location.pathname === '/privacy-policy';
 
+  // Se o usuário não estiver autenticado e não estiver nas páginas de login ou política de privacidade, redireciona
   if (!isAuthenticated && !isLoginPage && !isPrivacyPolicyPage) {
     return <Navigate to="/login" replace />;
   }
@@ -87,7 +99,6 @@ const AppContent = ({ isAuthenticated, onLoginSuccess, onLogout }) => {
           <Route path="/metricas" element={<Metricas />} />
           <Route path="/metricas/:empresaId" element={<Metricas />} />
           <Route path="/cadastro-clientes" element={<CadastroClientes />} />
-          <Route path="/configuracoes" element={<Configuracoes />} />
           <Route path="/editar-empresa/:id" element={<EditarEmpresa />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/politica-de-privacidade" element={<PoliticaDePrivacidade />} />

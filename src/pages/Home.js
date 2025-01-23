@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import config from './config';
 
 const Home = () => {
   const [isFirstAccess, setIsFirstAccess] = useState(false);
@@ -14,6 +15,8 @@ const Home = () => {
     'Navegue facilmente entre as seções e aproveite as ferramentas para otimizar sua gestão.'
   ];
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const firstVisit = localStorage.getItem('firstVisit');
     if (!firstVisit) {
@@ -21,16 +24,41 @@ const Home = () => {
       localStorage.setItem('firstVisit', 'false');
     }
 
-    const empresasCadastradas = JSON.parse(localStorage.getItem('empresas')) || [];
-    setEmpresas(empresasCadastradas);
+    // Simulando uma chamada ao backend para buscar empresas
+    const fetchEmpresas = async () => {
+      try {
+        const response = await fetch(`${config.API_URL}/list-empresas`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: localStorage.getItem('username') }),
+        });
 
-    // Troca de textos no carrossel a cada 5 segundos
+        if (!response.ok) {
+          throw new Error('Erro ao buscar empresas.');
+        }
+
+        const data = await response.json();
+        // Assegura que a resposta tenha o formato correto
+        setEmpresas(data.empresas || []);
+      } catch (err) {
+        console.error('Erro ao buscar empresas:', err);
+      }
+    };
+
+    fetchEmpresas();
+
     const textInterval = setInterval(() => {
       setCurrentTextIndex((prevIndex) => (prevIndex + 1) % tutorialTexts.length);
-    }, 5000); // Troca de texto a cada 5 segundos
+    }, 5000);
 
     return () => clearInterval(textInterval);
-  }, []);
+  }, [tutorialTexts.length]);
+
+  const handleButtonClick = (empresaNome) => {
+    // Corrige a navegação para incluir o nome da empresa na URL
+    navigate(`/metricas/${encodeURIComponent(empresaNome)}`);
+  };
 
   return (
     <div style={homeContainerStyle}>
@@ -43,9 +71,6 @@ const Home = () => {
         <div style={introContainerStyle}>
           <h1 style={headingStyle}>Bem-vindo à nossa plataforma!</h1>
           <p style={descriptionStyle}>Explore nossas ferramentas incríveis e comece a otimizar sua gestão agora.</p>
-          <Link to="/metricas">
-            <button style={plusButtonStyle}>+</button>
-          </Link>
         </div>
       ) : (
         <div style={shortcutsContainerStyle}>
@@ -53,17 +78,16 @@ const Home = () => {
           <div style={shortcutsStyle}>
             {empresas.length > 0 ? (
               empresas.map((empresa, index) => (
-                <Link key={index} to={`/metricas?empresa=${empresa.id}`} style={shortcutStyle}>
-                  {empresa.nome}
-                </Link>
+                <button
+                  key={index}
+                  style={shortcutButtonStyle}
+                  onClick={() => handleButtonClick(empresa)} // Passa o nome diretamente
+                >
+                  {empresa}
+                </button>
               ))
             ) : (
-              <div style={noEmpresasContainer}>
-                <p style={noEmpresasText}>Nenhuma empresa cadastrada.</p>
-                <Link to="/cadastro-clientes">
-                  <button style={plusButtonStyle}>+</button>
-                </Link>
-              </div>
+              <p style={noEmpresasText}>Nenhuma empresa cadastrada.</p>
             )}
           </div>
         </div>
@@ -93,10 +117,6 @@ const carouselContainerStyle = {
   boxShadow: '0 6px 15px rgba(0, 0, 0, 0.1)',
   marginBottom: '20px',
   textAlign: 'center',
-  position: 'relative',
-  top: '0',
-  zIndex: 1,
-  transform: 'translateY(-40px)',
 };
 
 const carouselTextStyle = {
@@ -105,7 +125,6 @@ const carouselTextStyle = {
   fontWeight: '500',
   fontStyle: 'italic',
   textAlign: 'center',
-  transition: 'transform 0.3s ease',
 };
 
 const introContainerStyle = {
@@ -129,22 +148,6 @@ const descriptionStyle = {
   fontSize: '16px',
   marginTop: '20px',
   marginBottom: '30px',
-};
-
-const plusButtonStyle = {
-  marginTop: '20px',
-  fontSize: '36px',
-  padding: '20px',
-  borderRadius: '50%',
-  width: '80px',
-  height: '80px',
-  backgroundColor: '#4CAF50',
-  color: 'white',
-  border: 'none',
-  fontWeight: 'bold',
-  boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-  cursor: 'pointer',
-  transition: 'transform 0.3s ease',
 };
 
 const shortcutsContainerStyle = {
@@ -172,35 +175,25 @@ const shortcutsStyle = {
   flexWrap: 'wrap',
 };
 
-const shortcutStyle = {
-  padding: '12px 24px',
+const shortcutButtonStyle = {
+  padding: '15px 30px',
   backgroundColor: '#4CAF50',
   color: 'white',
   textDecoration: 'none',
-  borderRadius: '25px',
+  borderRadius: '15px',
   fontSize: '16px',
   fontWeight: '500',
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   transition: 'background-color 0.3s, transform 0.2s ease',
+  border: 'none',
   cursor: 'pointer',
-  display: 'inline-block',
   margin: '5px',
-};
-
-const noEmpresasContainer = {
-  textAlign: 'center',
-  backgroundColor: '#ffffff',
-  padding: '40px 50px',
-  borderRadius: '10px',
-  boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-  maxWidth: '500px',
-  width: '100%',
 };
 
 const noEmpresasText = {
   fontSize: '18px',
   color: '#888',
-  marginBottom: '20px',
+  marginTop: '20px',
 };
 
 export default Home;

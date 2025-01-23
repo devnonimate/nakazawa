@@ -34,9 +34,6 @@ const Header = () => {
             <Link to="/cadastro-clientes" style={linkStyle}>Cadastro de Clientes</Link>
           </li>
           <li style={navItemStyle}>
-            <Link to="/configuracoes" style={linkStyle}>Configurações</Link>
-          </li>
-          <li style={navItemStyle}>
             <button onClick={handleLogout} style={logoutButtonStyle}>Sair</button>
           </li>
         </ul>

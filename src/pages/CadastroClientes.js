@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import config from './config';
 
 const CadastroClientes = () => {
   const [clienteNome, setClienteNome] = useState('');
@@ -38,8 +39,9 @@ const CadastroClientes = () => {
     };
 
     try {
-      const response = await fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/cadastrar-empresa-cliente', {
+      const response = await fetch(`${config.API_URL}/api/cadastrar-empresa-cliente`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },

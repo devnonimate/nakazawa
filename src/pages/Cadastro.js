@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import './Cadastro.css'; // Reutilizando o mesmo CSS com adaptações
+import './Cadastro.css'; // Reutilizando o mesmo CSS com adaptaçõe
+import config from './config';
 import { FaUserAlt, FaLock } from 'react-icons/fa'; // Importando ícones
 import { useNavigate } from 'react-router-dom'; // Hook para navegação
 
@@ -20,7 +21,7 @@ const Cadastro = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/register', {
+      const response = await fetch(`${config.API_URL}/api/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Login.css';
+import config from './config';
 import { FaUserAlt, FaLock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
@@ -47,8 +48,9 @@ const Login = ({ onLoginSuccess }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/login', {
+      const response = await fetch(`${config.API_URL}/api/login`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -69,39 +71,6 @@ const Login = ({ onLoginSuccess }) => {
     } catch (error) {
       setErrorMessage('Erro ao conectar ao servidor!');
     }
-  };
-
-  const handleFacebookLogin = () => {
-    const popup = window.open(
-      'https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/auth/facebook',
-      'Facebook Login',
-      'width=500,height=600'
-    );
-
-    const interval = setInterval(() => {
-      if (popup && popup.closed) {
-        clearInterval(interval);
-
-        fetch('https://db8a-2804-71d4-6005-50-ce1-e935-e7f5-e9cc.ngrok-free.app/api/get-facebook-email', {
-          method: 'GET',
-          credentials: 'include',
-        })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-            throw new Error('Erro ao obter email do Facebook');
-          })
-          .then((data) => {
-            localStorage.setItem('userEmail', data.email); // Armazena o email do Facebook
-            onLoginSuccess();
-            navigate('/home'); // Redireciona para a página home
-          })
-          .catch((error) => {
-            setErrorMessage('Erro ao conectar com Facebook: ' + error.message);
-          });
-      }
-    }, 500);
   };
 
   return (
@@ -139,21 +108,6 @@ const Login = ({ onLoginSuccess }) => {
             </div>
             {errorMessage && <div className="error-message">{errorMessage}</div>}
             <button type="submit" className="login-button">Entrar</button>
-            <div className="alternative-login">
-              <p>Ou</p>
-              <button
-                type="button"
-                className="facebook-login-button"
-                onClick={handleFacebookLogin}
-              >
-                <img
-                  src="https://i.imgur.com/tOVLfRr.png"
-                  alt="Facebook Login"
-                  className="facebook-logo"
-                />
-                Login com Facebook
-              </button>
-            </div>
             <p className="signup-link">
               Não tem uma conta?
               <br />

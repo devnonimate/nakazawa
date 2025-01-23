@@ -1,0 +1,48 @@
+.hotmart-container {
+  position: relative;
+  display: inline-block;
+}
+
+.hotmart-btn {
+  background-color: #ff6600;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.hotmart-btn:hover {
+  background-color: #e65c00;
+}
+
+.hotmart-menu {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 200px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.hotmart-menu li {
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.hotmart-menu li:hover {
+  background-color: #f5f5f5;
+}
+
+.metric-component-container {
+  margin-top: 20px;
+}
