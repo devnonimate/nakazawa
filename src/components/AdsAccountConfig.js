@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import config from '../pages/config.js';
 
-const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
+const AdsAccountConfig = ({ selectedEmpresa }) => {
   const [selectedCampaign, setSelectedCampaign] = useState('');
   const [selectedFields, setSelectedFields] = useState([]); // Agora aceita múltiplos campos
   const [fields, setFields] = useState([]);
@@ -12,14 +12,25 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
   const [response, setResponse] = useState(null);
 
   const campaignFields = [
-    { id: 'external_maximum_impression', description: 'Impressões máximas previstas para a campanha.' },
-    { id: 'external_budget', description: 'Orçamento total planejado para a campanha.' },
-    { id: 'time_updated', description: 'Última atualização da previsão.' },
-    { id: 'pause_periods', description: 'Períodos em que a campanha está pausada.' },
-    { id: 'audience_size_lower_bound', description: 'Tamanho mínimo estimado do público-alvo.' },
-    { id: 'external_maximum_budget', description: 'Orçamento máximo permitido na previsão.' },
-    { id: 'prediction_mode', description: 'Modo da previsão (por exemplo, otimizado para alcance ou frequência).' },
-    { id: 'external_maximum_reach', description: 'Alcance máximo estimado para a campanha.' }
+    { id: 'id', description: 'ID único do anúncio.' },
+    { id: 'name', description: 'Nome do anúncio.' },
+    { id: 'bid_amount', description: 'Valor do lance associado ao anúncio.' },
+    { id: 'adset_id', description: 'ID do conjunto de anúncios ao qual o anúncio pertence.' },
+    { id: 'creative', description: 'Detalhes do criativo do anúncio, incluindo IDs e URLs de mídias associadas.' },
+    { id: 'effective_instagram_story_id', description: 'ID do Story no Instagram associado ao criativo (se aplicável).' },
+    { id: 'effective_instagram_media_id', description: 'ID da mídia do Instagram associada ao criativo (se aplicável).' },
+    { id: 'instagram_permalink_url', description: 'URL permanente do anúncio no Instagram.' },
+    { id: 'status', description: 'Status do anúncio (exemplo: ACTIVE, PAUSED).' },
+    { id: 'effective_status', description: 'Status efetivo do anúncio, considerando todas as condições e restrições.' },
+    { id: 'created_time', description: 'Data e hora em que o anúncio foi criado.' },
+    { id: 'updated_time', description: 'Data e hora da última atualização do anúncio.' },
+    { id: 'tracking_specs', description: 'Especificações de rastreamento para o anúncio (exemplo: URLs de rastreamento).' },
+    { id: 'conversion_specs', description: 'Especificações de conversão associadas ao anúncio.' },
+    { id: 'ad_review_feedback', description: 'Feedback da revisão do anúncio, indicando se o anúncio foi aprovado ou reprovado, e o motivo se houver.' },
+    { id: 'adlabels', description: 'Rótulos do anúncio, que são usados para organizar anúncios em grupos.' },
+    { id: 'issues_info', description: 'Informações sobre quaisquer problemas ou restrições associadas ao anúncio.' },
+    { id: 'conversion_domain', description: 'Domínio de conversão associado ao anúncio, usado para rastrear conversões.' },
+    { id: 'campaign_id', description: 'ID da campanha à qual o anúncio pertence.' }
   ];
 
   const fetchCampaigns = async () => {
@@ -99,7 +110,7 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
     };
 
     try {
-      const url = new URL(`${config.API_URL}/api/frequency-predictions`);
+      const url = new URL(`${config.API_URL}/api/ads-account`);
       url.searchParams.append('email', payload.email);
       url.searchParams.append('nome_empresa', payload.empresa);
       url.searchParams.append('campaignId', payload.campaignId);
@@ -115,14 +126,14 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Erro ao gerar previsões.');
+        throw new Error(data.error || 'Erro ao Carregar Resultados.');
       }
 
       const data = await response.json();
-      console.log('Previsões de Frequência geradas:', data);
+      console.log('Resultados Carregados:', data);
       setResponse(data);
     } catch (error) {
-      console.error('Erro ao gerar previsões:', error.message);
+      console.error('Erro ao Carregar Resultados:', error.message);
       setError(error.message);
     } finally {
       setLoading(false);
@@ -131,7 +142,7 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
 
   return (
     <div>
-      <h3>Configurações de Previsões de Frequência</h3>
+      <h3>Metricas Facebook ADS</h3>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -167,12 +178,12 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
       </button>
 
       <button onClick={handleGenerate} disabled={loading}>
-        {loading ? 'Gerando Previsões...' : 'Gerar Previsões'}
+        {loading ? 'Carregando Resultados...' : 'Carregar Resultados'}
       </button>
 
       {response && (
         <div>
-          <h4>Resultado das Previsões de Frequência:</h4>
+          <h4>Resultado:</h4>
           <pre>{JSON.stringify(response, null, 2)}</pre>
         </div>
       )}
@@ -180,4 +191,4 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
   );
 };
 
-export default FrequencyPredictionsConfig;
+export default AdsAccountConfig;

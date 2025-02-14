@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import config from '../pages/config.js';
 
-const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
+const CampaignDetailsConfig = ({ selectedEmpresa }) => {
   const [selectedCampaign, setSelectedCampaign] = useState('');
   const [selectedFields, setSelectedFields] = useState([]); // Agora aceita múltiplos campos
   const [fields, setFields] = useState([]);
@@ -12,14 +12,30 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
   const [response, setResponse] = useState(null);
 
   const campaignFields = [
-    { id: 'external_maximum_impression', description: 'Impressões máximas previstas para a campanha.' },
-    { id: 'external_budget', description: 'Orçamento total planejado para a campanha.' },
-    { id: 'time_updated', description: 'Última atualização da previsão.' },
-    { id: 'pause_periods', description: 'Períodos em que a campanha está pausada.' },
-    { id: 'audience_size_lower_bound', description: 'Tamanho mínimo estimado do público-alvo.' },
-    { id: 'external_maximum_budget', description: 'Orçamento máximo permitido na previsão.' },
-    { id: 'prediction_mode', description: 'Modo da previsão (por exemplo, otimizado para alcance ou frequência).' },
-    { id: 'external_maximum_reach', description: 'Alcance máximo estimado para a campanha.' }
+    { id: 'id', description: 'ID da campanha.' },
+    { id: 'name', description: 'Nome da campanha.' },
+    { id: 'objective', description: 'Objetivo da campanha (exemplo: TRAFFIC, AWARENESS, SALES).' },
+    { id: 'account_id', description: 'ID da conta de anúncios associada.' },
+    { id: 'buying_type', description: 'Tipo de compra (exemplo: AUCTION, FIXED_PRICE).' },
+    { id: 'daily_budget', description: 'Orçamento diário da campanha.' },
+    { id: 'lifetime_budget', description: 'Orçamento total da campanha.' },
+    { id: 'spend_cap', description: 'Limite de gasto da campanha.' },
+    { id: 'bid_strategy', description: 'Estratégia de lances (exemplo: LOWEST_COST, TARGET_COST).' },
+    { id: 'pacing_type', description: 'Tipo de aceleração de gasto (exemplo: STANDARD, AGGRESSIVE).' },
+    { id: 'status', description: 'Status da campanha (exemplo: ACTIVE, PAUSED, DELETED).' },
+    { id: 'effective_status', description: 'Status efetivo da campanha, considerando restrições e condições.' },
+    { id: 'promoted_object', description: 'Objeto promovido pela campanha (exemplo: site, app).' },
+    { id: 'recommendations', description: 'Recomendações do sistema para melhorar a campanha.' },
+    { id: 'start_time', description: 'Data e hora de início da campanha.' },
+    { id: 'stop_time', description: 'Data e hora de término da campanha.' },
+    { id: 'created_time', description: 'Data de criação da campanha.' },
+    { id: 'updated_time', description: 'Data de última atualização da campanha.' },
+    { id: 'adlabels', description: 'Rótulos aplicados à campanha.' },
+    { id: 'issues_info', description: 'Informações sobre problemas com a campanha (exemplo: erros).' },
+    { id: 'special_ad_categories', description: 'Categorias especiais de anúncios (exemplo: POLITICAL).' },
+    { id: 'special_ad_category_country', description: 'País associado a categorias especiais de anúncios.' },
+    { id: 'smart_promotion_type', description: 'Tipo de promoção inteligente (exemplo: EVENTS, PRODUCTS).' },
+    { id: 'is_skadnetwork_attribution', description: 'Indica se a atribuição é feita via SKAdNetwork para campanhas de iOS.' }
   ];
 
   const fetchCampaigns = async () => {
@@ -99,7 +115,7 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
     };
 
     try {
-      const url = new URL(`${config.API_URL}/api/frequency-predictions`);
+      const url = new URL(`${config.API_URL}/api/campaign-details`);
       url.searchParams.append('email', payload.email);
       url.searchParams.append('nome_empresa', payload.empresa);
       url.searchParams.append('campaignId', payload.campaignId);
@@ -115,14 +131,14 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Erro ao gerar previsões.');
+        throw new Error(data.error || 'Erro ao Carregar Resultados.');
       }
 
       const data = await response.json();
-      console.log('Previsões de Frequência geradas:', data);
+      console.log('Resultados Carregados:', data);
       setResponse(data);
     } catch (error) {
-      console.error('Erro ao gerar previsões:', error.message);
+      console.error('Erro ao Carregar Resultados:', error.message);
       setError(error.message);
     } finally {
       setLoading(false);
@@ -131,7 +147,7 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
 
   return (
     <div>
-      <h3>Configurações de Previsões de Frequência</h3>
+      <h3>Metricas Facebook ADS</h3>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -167,12 +183,12 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
       </button>
 
       <button onClick={handleGenerate} disabled={loading}>
-        {loading ? 'Gerando Previsões...' : 'Gerar Previsões'}
+        {loading ? 'Carregando Resultados...' : 'Carregar Resultados'}
       </button>
 
       {response && (
         <div>
-          <h4>Resultado das Previsões de Frequência:</h4>
+          <h4>Resultado:</h4>
           <pre>{JSON.stringify(response, null, 2)}</pre>
         </div>
       )}
@@ -180,4 +196,4 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
   );
 };
 
-export default FrequencyPredictionsConfig;
+export default CampaignDetailsConfig;

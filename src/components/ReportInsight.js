@@ -2,25 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import config from '../pages/config.js';
 
-const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
+const CampaignReportConfig = ({ selectedEmpresa }) => {
   const [selectedCampaign, setSelectedCampaign] = useState('');
-  const [selectedFields, setSelectedFields] = useState([]); // Agora aceita múltiplos campos
-  const [fields, setFields] = useState([]);
+  const [timeIncrement, setTimeIncrement] = useState('7d');
+  const [spend, setSpend] = useState('');
+  const [since, setSince] = useState('');
+  const [until, setUntil] = useState('');
+  const [limit, setLimit] = useState('');
   const [campaigns, setCampaigns] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
-
-  const campaignFields = [
-    { id: 'external_maximum_impression', description: 'Impressões máximas previstas para a campanha.' },
-    { id: 'external_budget', description: 'Orçamento total planejado para a campanha.' },
-    { id: 'time_updated', description: 'Última atualização da previsão.' },
-    { id: 'pause_periods', description: 'Períodos em que a campanha está pausada.' },
-    { id: 'audience_size_lower_bound', description: 'Tamanho mínimo estimado do público-alvo.' },
-    { id: 'external_maximum_budget', description: 'Orçamento máximo permitido na previsão.' },
-    { id: 'prediction_mode', description: 'Modo da previsão (por exemplo, otimizado para alcance ou frequência).' },
-    { id: 'external_maximum_reach', description: 'Alcance máximo estimado para a campanha.' }
-  ];
 
   const fetchCampaigns = async () => {
     setLoading(true);
@@ -69,21 +61,9 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
     }
   };
 
-  useEffect(() => {
-    setFields(campaignFields);
-  }, []);
-
-  const handleFieldSelection = (fieldId) => {
-    setSelectedFields(prevFields =>
-      prevFields.includes(fieldId)
-        ? prevFields.filter(id => id !== fieldId) // Remove se já estiver selecionado
-        : [...prevFields, fieldId] // Adiciona se não estiver
-    );
-  };
-
   const handleGenerate = async () => {
-    if (!selectedCampaign || selectedFields.length === 0) {
-      setError('Selecione uma campanha e pelo menos um campo.');
+    if (!selectedCampaign) {
+      setError('Selecione uma campanha.');
       return;
     }
 
@@ -91,20 +71,17 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
     setError('');
 
     const storedEmail = localStorage.getItem('username');
-    const payload = {
-      email: storedEmail,
-      empresa: selectedEmpresa,
-      campaignId: selectedCampaign,
-      fields: selectedFields.join(','), // Junta os campos selecionados separados por vírgula
-    };
+    const url = new URL(`${config.API_URL}/api/report-insights`);
+    url.searchParams.append('email', storedEmail);
+    url.searchParams.append('nome_empresa', selectedEmpresa);
+    url.searchParams.append('campaignId', selectedCampaign);
+    url.searchParams.append('time_increment', timeIncrement);
+    url.searchParams.append('spend', spend);
+    url.searchParams.append('since', since);
+    url.searchParams.append('until', until);
+    url.searchParams.append('limit', limit);
 
     try {
-      const url = new URL(`${config.API_URL}/api/frequency-predictions`);
-      url.searchParams.append('email', payload.email);
-      url.searchParams.append('nome_empresa', payload.empresa);
-      url.searchParams.append('campaignId', payload.campaignId);
-      url.searchParams.append('fields', payload.fields);
-
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -115,14 +92,14 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Erro ao gerar previsões.');
+        throw new Error(data.error || 'Erro ao gerar relatório.');
       }
 
       const data = await response.json();
-      console.log('Previsões de Frequência geradas:', data);
+      console.log('Relatório gerado:', data);
       setResponse(data);
     } catch (error) {
-      console.error('Erro ao gerar previsões:', error.message);
+      console.error('Erro ao gerar relatório:', error.message);
       setError(error.message);
     } finally {
       setLoading(false);
@@ -131,7 +108,7 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
 
   return (
     <div>
-      <h3>Configurações de Previsões de Frequência</h3>
+      <h3>Configurações de Relatório de Campanha</h3>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -146,20 +123,32 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
       </div>
 
       <div>
-        <label>Selecione os campos:</label>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-          {fields.map(field => (
-            <label key={field.id} style={{ display: 'flex', alignItems: 'center' }}>
-              <input
-                type="checkbox"
-                value={field.id}
-                checked={selectedFields.includes(field.id)}
-                onChange={() => handleFieldSelection(field.id)}
-              />
-              {field.description}
-            </label>
-          ))}
-        </div>
+        <label>Time Increment:</label>
+        <select value={timeIncrement} onChange={(e) => setTimeIncrement(e.target.value)}>
+          <option value="7d">7 Dias</option>
+          <option value="30d">30 Dias</option>
+          <option value="all_days">Todos os Dias</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Spend:</label>
+        <input type="text" value={spend} onChange={(e) => setSpend(e.target.value)} />
+      </div>
+
+      <div>
+        <label>Since:</label>
+        <input type="date" value={since} onChange={(e) => setSince(e.target.value)} />
+      </div>
+
+      <div>
+        <label>Until:</label>
+        <input type="date" value={until} onChange={(e) => setUntil(e.target.value)} />
+      </div>
+
+      <div>
+        <label>Limit:</label>
+        <input type="number" value={limit} onChange={(e) => setLimit(e.target.value)} />
       </div>
 
       <button onClick={fetchCampaigns} disabled={loading}>
@@ -167,12 +156,12 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
       </button>
 
       <button onClick={handleGenerate} disabled={loading}>
-        {loading ? 'Gerando Previsões...' : 'Gerar Previsões'}
+        {loading ? 'Gerando Relatório...' : 'Gerar Relatório'}
       </button>
 
       {response && (
         <div>
-          <h4>Resultado das Previsões de Frequência:</h4>
+          <h4>Resultado do Relatório:</h4>
           <pre>{JSON.stringify(response, null, 2)}</pre>
         </div>
       )}
@@ -180,4 +169,4 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
   );
 };
 
-export default FrequencyPredictionsConfig;
+export default CampaignReportConfig;

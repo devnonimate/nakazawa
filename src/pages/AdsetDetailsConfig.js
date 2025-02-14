@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import config from '../pages/config.js';
 
-const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
+const AdsetDetailsConfig = ({ selectedEmpresa }) => {
   const [selectedCampaign, setSelectedCampaign] = useState('');
   const [selectedFields, setSelectedFields] = useState([]); // Agora aceita múltiplos campos
   const [fields, setFields] = useState([]);
@@ -99,7 +99,7 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
     };
 
     try {
-      const url = new URL(`${config.API_URL}/api/frequency-predictions`);
+      const url = new URL(`${config.API_URL}/api/adset-details`);
       url.searchParams.append('email', payload.email);
       url.searchParams.append('nome_empresa', payload.empresa);
       url.searchParams.append('campaignId', payload.campaignId);
@@ -180,4 +180,4 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
   );
 };
 
-export default FrequencyPredictionsConfig;
+export default AdsetDetailsConfig;

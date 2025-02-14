@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import config from '../pages/config.js';
 
-const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
+const CustomConversionConfig = ({ selectedEmpresa }) => {
   const [selectedCampaign, setSelectedCampaign] = useState('');
   const [selectedFields, setSelectedFields] = useState([]); // Agora aceita múltiplos campos
   const [fields, setFields] = useState([]);
@@ -12,14 +12,19 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
   const [response, setResponse] = useState(null);
 
   const campaignFields = [
-    { id: 'external_maximum_impression', description: 'Impressões máximas previstas para a campanha.' },
-    { id: 'external_budget', description: 'Orçamento total planejado para a campanha.' },
-    { id: 'time_updated', description: 'Última atualização da previsão.' },
-    { id: 'pause_periods', description: 'Períodos em que a campanha está pausada.' },
-    { id: 'audience_size_lower_bound', description: 'Tamanho mínimo estimado do público-alvo.' },
-    { id: 'external_maximum_budget', description: 'Orçamento máximo permitido na previsão.' },
-    { id: 'prediction_mode', description: 'Modo da previsão (por exemplo, otimizado para alcance ou frequência).' },
-    { id: 'external_maximum_reach', description: 'Alcance máximo estimado para a campanha.' }
+    { id: 'account_id', description: 'Identificador da conta de anúncios.' },
+    { id: 'creation_time', description: 'A data e hora em que a conversão personalizada foi criada.' },
+    { id: 'custom_event_type', description: 'O tipo de evento personalizado (por exemplo, "Compra", "Cadastro", etc.' },
+    { id: 'default_conversion_value', description: 'O valor padrão atribuído à conversão (como o valor monetário de uma compra).' },
+    { id: 'description', description: 'Descrição da conversão personalizada.' },
+    { id: 'data_sources', description: 'As fontes de dados associadas à conversão (como o Pixel do Facebook ou eventos offline).' },
+    { id: 'first_fired_time', description: 'A primeira vez que o evento personalizado foi acionado.' },
+    { id: 'is_archived', description: 'Indica se a conversão personalizada foi arquivada (não ativa).' },
+    { id: 'last_fired_time', description: 'A última vez que o evento personalizado foi acionado.' },
+    { id: 'name', description: 'O nome da conversão personalizada.' },
+    { id: 'pixel', description: 'O ID do pixel do Facebook associado à conversão personalizada.' },
+    { id: 'rule', description: 'A regra usada para definir a conversão personalizada (como a URL visitada, a ação realizada, etc.' },
+    { id: 'id', description: 'Identificador único da conversão personalizada.' }
   ];
 
   const fetchCampaigns = async () => {
@@ -99,7 +104,7 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
     };
 
     try {
-      const url = new URL(`${config.API_URL}/api/frequency-predictions`);
+      const url = new URL(`${config.API_URL}/api/custom-conversion`);
       url.searchParams.append('email', payload.email);
       url.searchParams.append('nome_empresa', payload.empresa);
       url.searchParams.append('campaignId', payload.campaignId);
@@ -115,14 +120,14 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Erro ao gerar previsões.');
+        throw new Error(data.error || 'Erro ao Carregar Resultados.');
       }
 
       const data = await response.json();
-      console.log('Previsões de Frequência geradas:', data);
+      console.log('Resultados Carregados:', data);
       setResponse(data);
     } catch (error) {
-      console.error('Erro ao gerar previsões:', error.message);
+      console.error('Erro ao Carregar Resultados:', error.message);
       setError(error.message);
     } finally {
       setLoading(false);
@@ -131,7 +136,7 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
 
   return (
     <div>
-      <h3>Configurações de Previsões de Frequência</h3>
+      <h3>Metricas Facebook ADS</h3>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -167,12 +172,12 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
       </button>
 
       <button onClick={handleGenerate} disabled={loading}>
-        {loading ? 'Gerando Previsões...' : 'Gerar Previsões'}
+        {loading ? 'Carregando Resultados...' : 'Carregar Resultados'}
       </button>
 
       {response && (
         <div>
-          <h4>Resultado das Previsões de Frequência:</h4>
+          <h4>Resultado:</h4>
           <pre>{JSON.stringify(response, null, 2)}</pre>
         </div>
       )}
@@ -180,4 +185,4 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
   );
 };
 
-export default FrequencyPredictionsConfig;
+export default CustomConversionConfig;

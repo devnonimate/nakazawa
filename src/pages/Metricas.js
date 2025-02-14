@@ -13,14 +13,12 @@ const hotmartMetrics = [
   { name: 'Vendas do Usuário', component: 'SalesUsersConfig' },
   { name: 'Comissões de Vendas', component: 'SalesComissionsConfig' },
   { name: 'Repartição do Preço de Venda', component: 'SalesPriceDetailsConfig' },
-  { name: 'Inscrições', component: 'SubscriptionsConfig' },
-  { name: 'Resumo das Assinaturas', component: 'SubscriptionSummaryConfig' },
-  { name: 'Assinaturas', component: 'SubscriberConfig' },
+ // { name: 'Resumo das Assinaturas', component: 'SubscriptionSummaryConfig' },
 ];
 
 const facebookMetrics = [
   { name: 'Previsões de Campanhas', component: 'FrequencyPredictionsConfig' },
-  { name: 'Lista de Aplicativos que podem ser promovidos', component: 'AdvertisableApplicationConfig' },
+  { name: 'Lista de Aplicativos que podem ser promovidos', component: 'AdvertisableApplicationsConfig' },
   { name: 'Detalhes sobre campanha', component: 'CampaignDetailsConfig' },
   { name: 'Informações detalhadas sobre um Adset', component: 'AdsetDetailsConfig' },
   { name: 'Informação detalhada sobre uma conta de anúncios no Facebook', component: 'AdsAccountConfig' },
@@ -33,7 +31,6 @@ const facebookMetrics = [
   { name: 'Informações detalhadas sobre um anuncio específico', component: 'DetailsAdidConfig' },
   { name: 'Obter dados detalhados de desempenho em uma conta de anúncios do Facebook', component: 'InsightsAdsGroupsConfig' },
   { name: 'Relatório de insights sobre o desempenho de anúncios em uma conta do Facebook durante um intervalo de tempo especificado', component: 'ReportInsight' },
-  { name: 'Busca de Interesses', component: 'SearchInterest' },
   { name: 'Estatísticas de desempenho de um Pixel do Facebook', component: 'PixelStatsConfig' },
 ];
 
@@ -47,6 +44,7 @@ const Metricas = () => {
   const [showHotmartForm, setShowHotmartForm] = useState(false);
   const [hotmartFilters, setHotmartFilters] = useState(null);
   const [dynamicComponent, setDynamicComponent] = useState(null);
+  const [facebookCampaignsData, setFacebookCampaignsData] = useState(null);  // Novo estado
   const navigate = useNavigate();
   const email = localStorage.getItem('username');
 
@@ -193,6 +191,8 @@ const Metricas = () => {
       )}
 
       {isFacebookSelected && dynamicComponent && React.createElement(dynamicComponent, { selectedEmpresa, email })}
+      {selectedPlataforma === 'Hotmart' && dynamicComponent && React.createElement(dynamicComponent, { selectedEmpresa, email })}
+
     </div>
   );
 };

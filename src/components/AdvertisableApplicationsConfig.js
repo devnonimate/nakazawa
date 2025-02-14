@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import config from '../pages/config.js';
 
-const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
+const AdvertisableApplicationsConfig = ({ selectedEmpresa }) => {
   const [selectedCampaign, setSelectedCampaign] = useState('');
   const [selectedFields, setSelectedFields] = useState([]); // Agora aceita múltiplos campos
   const [fields, setFields] = useState([]);
@@ -12,14 +12,22 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
   const [response, setResponse] = useState(null);
 
   const campaignFields = [
-    { id: 'external_maximum_impression', description: 'Impressões máximas previstas para a campanha.' },
-    { id: 'external_budget', description: 'Orçamento total planejado para a campanha.' },
-    { id: 'time_updated', description: 'Última atualização da previsão.' },
-    { id: 'pause_periods', description: 'Períodos em que a campanha está pausada.' },
-    { id: 'audience_size_lower_bound', description: 'Tamanho mínimo estimado do público-alvo.' },
-    { id: 'external_maximum_budget', description: 'Orçamento máximo permitido na previsão.' },
-    { id: 'prediction_mode', description: 'Modo da previsão (por exemplo, otimizado para alcance ou frequência).' },
-    { id: 'external_maximum_reach', description: 'Alcance máximo estimado para a campanha.' }
+    { id: 'id', description: 'ID do aplicativo no Facebook.' },
+    { id: 'name', description: 'Nome do aplicativo.' },
+    { id: 'app_install_tracked', description: 'Indica se as instalações do aplicativo estão sendo rastreadas pelo Facebook Ads.' },
+    { id: 'app_name', description: 'Nome do aplicativo na loja de aplicativos.' },
+    { id: 'app_type', description: 'Tipo do aplicativo (exemplo: GAME, UTILITY, SOCIAL).' },
+    { id: 'category', description: 'Categoria do aplicativo (exemplo: Jogos, Entretenimento).' },
+    { id: 'icon_url', description: 'URL do ícone do aplicativo.' },
+    { id: 'ipad_app_store_id', description: 'ID do aplicativo na App Store para iPad.' },
+    { id: 'iphone_app_store_id', description: 'ID do aplicativo na App Store para iPhone.' },
+    { id: 'link', description: 'Link para o aplicativo no Facebook.' },
+    { id: 'mobile_web_url', description: 'URL da versão web móvel do aplicativo.' },
+    { id: 'object_store_urls', description: 'Links diretos para a página do aplicativo nas lojas (App Store/Google Play).' },
+    { id: 'supported_platforms', description: 'Plataformas suportadas (exemplo: ANDROID, IOS, WEB).' },
+    { id: 'website_url', description: 'URL do site oficial do aplicativo.' },
+    { id: 'photo_url', description: 'URL da foto de capa do aplicativo.' },
+    { id: 'advertisable_app_events', description: 'Eventos de aplicativo que podem ser usados em campanhas (exemplo: INSTALL, PURCHASE).'}
   ];
 
   const fetchCampaigns = async () => {
@@ -99,7 +107,7 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
     };
 
     try {
-      const url = new URL(`${config.API_URL}/api/frequency-predictions`);
+      const url = new URL(`${config.API_URL}/api/advertisable-applications`);
       url.searchParams.append('email', payload.email);
       url.searchParams.append('nome_empresa', payload.empresa);
       url.searchParams.append('campaignId', payload.campaignId);
@@ -115,14 +123,14 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Erro ao gerar previsões.');
+        throw new Error(data.error || 'Erro ao carregar Métricas.');
       }
 
       const data = await response.json();
-      console.log('Previsões de Frequência geradas:', data);
+      console.log('Métricas carregadas:', data);
       setResponse(data);
     } catch (error) {
-      console.error('Erro ao gerar previsões:', error.message);
+      console.error('Erro ao carregar Métricas:', error.message);
       setError(error.message);
     } finally {
       setLoading(false);
@@ -131,7 +139,7 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
 
   return (
     <div>
-      <h3>Configurações de Previsões de Frequência</h3>
+      <h3>Métricas Facebook ADS</h3>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -167,7 +175,7 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
       </button>
 
       <button onClick={handleGenerate} disabled={loading}>
-        {loading ? 'Gerando Previsões...' : 'Gerar Previsões'}
+        {loading ? 'Carregando Métricas...' : 'Carregar Métricas'}
       </button>
 
       {response && (
@@ -180,4 +188,4 @@ const FrequencyPredictionsConfig = ({ selectedEmpresa }) => {
   );
 };
 
-export default FrequencyPredictionsConfig;
+export default AdvertisableApplicationsConfig;

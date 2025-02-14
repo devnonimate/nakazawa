@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import config from '../pages/config.js'; // Caminho correto para o arquivo de configuração
 
-const SalesHistoryConfig = ({ selectedEmpresa }) => {
+const SalesPriceDetailsConfig = ({ selectedEmpresa }) => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -70,7 +70,7 @@ const SalesHistoryConfig = ({ selectedEmpresa }) => {
       ...args,
     });
 
-    const url = `${config.API_URL}/api/history-sales?${params.toString()}`;
+    const url = `${config.API_URL}/api/sales-price-details?${params.toString()}`;
 
     console.log("URL da requisição:", url);
 
@@ -187,4 +187,4 @@ const SalesHistoryConfig = ({ selectedEmpresa }) => {
   );
 };
 
-export default SalesHistoryConfig;
+export default SalesPriceDetailsConfig;
